@@ -1,15 +1,15 @@
 package repoimpl
 
 import (
-	"database/sql"
 	"gd-blog/src/domain/entity"
+	"gorm.io/gorm"
 )
 
 type CommentRepoImpl struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func NewCommentRepoImpl(db *sql.DB) CommentRepoImpl {
+func NewCommentRepoImpl(db *gorm.DB) CommentRepoImpl {
 	return CommentRepoImpl{db: db}
 }
 

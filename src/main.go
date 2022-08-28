@@ -1,19 +1,20 @@
 package main
 
 import (
-	"database/sql"
 	"gd-blog/src/domain/service"
 	"gd-blog/src/ioc"
 	"gd-blog/src/repoimpl"
 	"gd-blog/src/route"
 	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 )
 
 func initComponents() error {
 	// 初始化顺序：数据库 -> 几个RepoImpl -> domainService
-	db, err := sql.Open("sqlite3", "file:sqlite/blog.db")
+	db, err := gorm.Open(sqlite.Open("sqlite/blog.db"), &gorm.Config{})
 	if err != nil {
 		return err
 	}

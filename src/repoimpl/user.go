@@ -1,15 +1,15 @@
 package repoimpl
 
 import (
-	"database/sql"
 	"gd-blog/src/domain/entity"
+	"gorm.io/gorm"
 )
 
 type UserRepoImpl struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func NewUserRepoImpl(db *sql.DB) UserRepoImpl {
+func NewUserRepoImpl(db *gorm.DB) UserRepoImpl {
 	return UserRepoImpl{db: db}
 }
 

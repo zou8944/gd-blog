@@ -1,56 +1,41 @@
 package repoimpl
 
 import (
-	"database/sql"
 	"gd-blog/src/domain/entity"
+	"gd-blog/src/repoimpl/model"
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 )
 
 type BlogRepoImpl struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func NewBlogRepoImpl(db *sql.DB) BlogRepoImpl {
+func NewBlogRepoImpl(db *gorm.DB) BlogRepoImpl {
 	return BlogRepoImpl{db: db}
 }
 
 func (b BlogRepoImpl) SelectOne(id int) (*entity.Blog, error) {
-	stmt, err := b.db.Prepare("SELECT * FROM blog WHERE id = #{id}")
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-	blog := &entity.Blog{}
-	err = stmt.QueryRow(id).Scan(blog)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		} else {
-			return nil, err
-		}
-	}
-	return blog, err
+	var blogModel model.Blog
+	b.db.Model(&model.Blog{}).Preload("Categories").First(&blogModel)
+	var blogEntity entity.Blog
+	err := copier.Copy(blogEntity, blogModel)
+	return &blogEntity, err
 }
 
 func (b BlogRepoImpl) Select(separateId int, limit int) ([]*entity.Blog, error) {
-	stmt, err := b.db.Prepare("SELECT * FROM blog WHERE id < ? ORDER BY id DESC LIMIT ?")
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-	blogs := []*entity.Blog{}
-	rows, err := stmt.Query(separateId, limit)
-	if err != nil {
-		return nil, err
-	}
-	for rows.Next() {
-		blog := &entity.Blog{}
-		err := rows.Scan(blog)
+	var blogModels []model.Blog
+	b.db.Model(&model.Blog{}).Find(&blogModels)
+	blogEntities := []*entity.Blog{}
+	for _, blogModel := range blogModels {
+		var blogEntity entity.Blog
+		err := copier.Copy(blogEntity, blogModel)
 		if err != nil {
 			return nil, err
 		}
-		blogs = append(blogs, blog)
+		blogEntities = append(blogEntities, &blogEntity)
 	}
-	return blogs, nil
+	return blogEntities, nil
 }
 
 func (b BlogRepoImpl) Search(keyword string, limit int) ([]*entity.Blog, error) {
