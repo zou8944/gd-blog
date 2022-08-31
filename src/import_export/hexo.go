@@ -2,7 +2,7 @@ package import_export
 
 import (
 	"bufio"
-	"gd-blog/src/repoimpl/model"
+	"gd-blog/src/persistence/model"
 	"gopkg.in/yaml.v2"
 	"io"
 	"strings"

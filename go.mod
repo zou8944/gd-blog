@@ -2,7 +2,12 @@ module gd-blog
 
 go 1.18
 
-require gopkg.in/yaml.v2 v2.4.0
+require (
+	gopkg.in/errgo.v2 v2.1.0
+	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/driver/sqlite v1.3.6
+	gorm.io/gorm v1.23.9-0.20220713102635-3262daf8d468
+)
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
@@ -16,9 +21,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/datatypes v1.0.7 // indirect
 	gorm.io/driver/mysql v1.3.6 // indirect
-	gorm.io/driver/sqlite v1.3.6 // indirect
 	gorm.io/gen v0.3.15 // indirect
-	gorm.io/gorm v1.23.9-0.20220713102635-3262daf8d468 // indirect
 	gorm.io/hints v1.1.0 // indirect
 	gorm.io/plugin/dbresolver v1.2.3 // indirect
 )

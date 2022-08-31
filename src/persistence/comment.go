@@ -1,4 +1,4 @@
-package repoimpl
+package persistence
 
 import (
 	"gd-blog/src/domain/entity"
@@ -9,8 +9,8 @@ type CommentRepoImpl struct {
 	db *gorm.DB
 }
 
-func NewCommentRepoImpl(db *gorm.DB) CommentRepoImpl {
-	return CommentRepoImpl{db: db}
+func NewCommentRepoImpl(db *gorm.DB) *CommentRepoImpl {
+	return &CommentRepoImpl{db: db}
 }
 
 func (cr CommentRepoImpl) Select(separateId int, limit int) ([]*entity.Comment, error) {

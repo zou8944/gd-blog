@@ -1,8 +1,8 @@
-package repoimpl
+package persistence
 
 import (
 	"gd-blog/src/domain/entity"
-	"gd-blog/src/repoimpl/model"
+	"gd-blog/src/persistence/model"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 )
@@ -11,11 +11,11 @@ type BlogRepoImpl struct {
 	db *gorm.DB
 }
 
-func NewBlogRepoImpl(db *gorm.DB) BlogRepoImpl {
-	return BlogRepoImpl{db: db}
+func NewBlogRepoImpl(db *gorm.DB) *BlogRepoImpl {
+	return &BlogRepoImpl{db: db}
 }
 
-func (b BlogRepoImpl) SelectOne(id int) (*entity.Blog, error) {
+func (b *BlogRepoImpl) SelectOne(id int) (*entity.Blog, error) {
 	var blogModel model.Blog
 	b.db.Model(&model.Blog{}).Preload("Categories").First(&blogModel)
 	var blogEntity entity.Blog
@@ -23,7 +23,7 @@ func (b BlogRepoImpl) SelectOne(id int) (*entity.Blog, error) {
 	return &blogEntity, err
 }
 
-func (b BlogRepoImpl) Select(separateId int, limit int) ([]*entity.Blog, error) {
+func (b *BlogRepoImpl) Select(separateId int, limit int) ([]*entity.Blog, error) {
 	var blogModels []model.Blog
 	b.db.Model(&model.Blog{}).Find(&blogModels)
 	blogEntities := []*entity.Blog{}
@@ -38,22 +38,22 @@ func (b BlogRepoImpl) Select(separateId int, limit int) ([]*entity.Blog, error) 
 	return blogEntities, nil
 }
 
-func (b BlogRepoImpl) Search(keyword string, limit int) ([]*entity.Blog, error) {
+func (b *BlogRepoImpl) Search(keyword string, limit int) ([]*entity.Blog, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b BlogRepoImpl) Insert(blog *entity.Blog) (*entity.Blog, error) {
+func (b *BlogRepoImpl) Insert(blog *entity.Blog) (*entity.Blog, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b BlogRepoImpl) Update(blog *entity.Blog) (*entity.Blog, error) {
+func (b *BlogRepoImpl) Update(blog *entity.Blog) (*entity.Blog, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b BlogRepoImpl) Delete(id int) (*entity.Blog, error) {
+func (b *BlogRepoImpl) Delete(id int) (*entity.Blog, error) {
 	//TODO implement me
 	panic("implement me")
 }

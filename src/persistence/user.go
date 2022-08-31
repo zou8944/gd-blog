@@ -1,4 +1,4 @@
-package repoimpl
+package persistence
 
 import (
 	"gd-blog/src/domain/entity"
@@ -9,8 +9,8 @@ type UserRepoImpl struct {
 	db *gorm.DB
 }
 
-func NewUserRepoImpl(db *gorm.DB) UserRepoImpl {
-	return UserRepoImpl{db: db}
+func NewUserRepoImpl(db *gorm.DB) *UserRepoImpl {
+	return &UserRepoImpl{db: db}
 }
 
 func (UserRepoImpl) SelectOne(email string) *entity.User {
