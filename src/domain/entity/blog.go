@@ -1,18 +1,10 @@
 package entity
 
-import "time"
+import (
+	"gd-blog/src/persistence/model"
+)
 
-type Blog struct {
-	Id           int
-	Title        string
-	Summary      string
-	Content      string
-	LikeCount    int
-	CollectCount int
-	Scores       []string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-}
+type Blog model.Blog
 
 func NewBlog(title, content string) (*Blog, error) {
 	blog := &Blog{
@@ -21,9 +13,6 @@ func NewBlog(title, content string) (*Blog, error) {
 		Content:      content,
 		LikeCount:    0,
 		CollectCount: 0,
-		Scores:       []string{},
-		CreatedAt:    time.Now(),
-		UpdatedAt:    time.Now(),
 	}
 	return blog, nil
 }

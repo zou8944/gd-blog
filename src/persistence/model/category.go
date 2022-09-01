@@ -1,13 +1,11 @@
 package model
 
-import "gorm.io/gorm"
-
 const TableNameCategory = "category"
 
 type Category struct {
-	gorm.Model
-	Name        string `gorm:"uniqueIndex"`
-	Description string
+	Model
+	Name        string `gorm:"uniqueIndex" json:"name"`
+	Description string `json:"description"`
 }
 
 func (*Category) TableName() string {

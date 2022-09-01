@@ -25,11 +25,18 @@ func (b *BlogRepoImpl) SelectOne(id int) (*entity.Blog, error) {
 
 func (b *BlogRepoImpl) Select(separateId int, limit int) ([]*entity.Blog, error) {
 	var blogModels []model.Blog
-	b.db.Model(&model.Blog{}).Find(&blogModels)
+	dsl := b.db.Preload("Categories").Preload("Tags")
+	if separateId != 0 {
+		dsl = dsl.Where("id < ?", separateId)
+	}
+	if limit == 0 {
+		limit = 20
+	}
+	dsl.Limit(limit).Order("id desc").Find(&blogModels)
 	blogEntities := []*entity.Blog{}
 	for _, blogModel := range blogModels {
-		var blogEntity entity.Blog
-		err := copier.Copy(blogEntity, blogModel)
+		blogEntity := entity.Blog{}
+		err := copier.Copy(&blogEntity, &blogModel)
 		if err != nil {
 			return nil, err
 		}

@@ -1,18 +1,16 @@
 package model
 
-import "gorm.io/gorm"
-
 const TableNameBlog = "blog"
 
 type Blog struct {
-	gorm.Model
-	Title        string
-	Summary      string
-	Content      string
-	LikeCount    int32
-	CollectCount int32
-	Categories   []Category `gorm:"many2many:blog_categories"`
-	Tags         []Tag      `gorm:"many2many:blog_tags"`
+	Model
+	Title        string     `json:"title"`
+	Summary      string     `json:"summary"`
+	Content      string     `json:"content"`
+	LikeCount    int32      `json:"likeCount"`
+	CollectCount int32      `json:"collectCount"`
+	Categories   []Category `gorm:"many2many:blog_categories" json:"categories"`
+	Tags         []Tag      `gorm:"many2many:blog_tags" json:"tags"`
 }
 
 func (*Blog) TableName() string {

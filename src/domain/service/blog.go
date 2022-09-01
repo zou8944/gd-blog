@@ -23,11 +23,19 @@ func (bs *BlogDomainService) GetBlog(id int) (*entity.Blog, error) {
 	return bs.blogRepo.SelectOne(id)
 }
 
-func (bs *BlogDomainService) ListBlog(sepId int, limit int) ([]*entity.Blog, error) {
+func (bs *BlogDomainService) ListBlog(sepId int, limit int) (map[string]interface{}, error) {
 	if limit <= 0 {
 		limit = 20
 	}
-	return bs.blogRepo.Select(sepId, limit)
+	blogs, err := bs.blogRepo.Select(sepId, limit)
+	if err != nil {
+		return nil, err
+	}
+	newSepId := blogs[len(blogs)-1].ID
+	return map[string]interface{}{
+		"data":       blogs,
+		"checkpoint": newSepId,
+	}, nil
 }
 
 func (bs *BlogDomainService) SearchBlog(keyword string, limit int) ([]*entity.Blog, error) {

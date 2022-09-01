@@ -1,12 +1,10 @@
 package model
 
-import "gorm.io/gorm"
-
 const TableNameComment = "comment"
 
 // Comment mapped from table <comment>
 type Comment struct {
-	gorm.Model
+	Model
 	BlogID   int32
 	Visitor  Visitor `gorm:"many2many:comment_visitors"`
 	ReplyID  int32

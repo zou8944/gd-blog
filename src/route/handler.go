@@ -32,7 +32,7 @@ func (bs *BlogHandler) HandleListBlog() func(w http.ResponseWriter, r *http.Requ
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Write(bytes)
 	}
 }
