@@ -6,7 +6,7 @@ const TableNameVisitor = "visitor"
 
 type Visitor struct {
 	gorm.Model
-	Name  string
+	Name  string `gorm:"uniqueIndex"`
 	IP    string
 	Email string
 }

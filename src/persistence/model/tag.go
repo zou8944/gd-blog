@@ -6,7 +6,7 @@ const TableNameLabel = "tag"
 
 type Tag struct {
 	gorm.Model
-	Name string
+	Name string `gorm:"uniqueIndex"`
 }
 
 func (*Tag) TableName() string {

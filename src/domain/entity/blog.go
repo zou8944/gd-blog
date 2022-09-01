@@ -48,7 +48,3 @@ func (b *Blog) UnLike() {
 func (b *Blog) Collect() {
 	b.CollectCount += 1
 }
-
-func (b *Blog) AddScore(score string) {
-	b.Scores = append(b.Scores, score)
-}

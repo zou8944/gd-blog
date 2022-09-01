@@ -6,7 +6,7 @@ const TableNameCategory = "category"
 
 type Category struct {
 	gorm.Model
-	Name        string
+	Name        string `gorm:"uniqueIndex"`
 	Description string
 }
 
