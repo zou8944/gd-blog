@@ -1,9 +1,11 @@
 package model
 
+import "gorm.io/gorm"
+
 const TableNameLabel = "tag"
 
 type Tag struct {
-	Model
+	gorm.Model
 	Name string `gorm:"uniqueIndex" json:"name"`
 }
 

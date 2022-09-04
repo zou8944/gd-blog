@@ -19,22 +19,22 @@ func InitRoutes() (*gin.Engine, error) {
 
 	br := r.Group("/blogs")
 	{
-		br.GET("", handler.HandleListBlog())
-		br.POST("", handler.HandleCreateBlog())
+		br.GET("", handler.ListBlog())
+		br.POST("", handler.CreateBlog())
 		bdr := br.Group("/{id}")
 		{
-			bdr.GET("", handler.HandleGetBlog())
-			bdr.PUT("", handler.HandleUpdateBlog())
+			bdr.GET("", handler.GetBlog())
+			bdr.PUT("", handler.UpdateBlog())
 			bdrl := bdr.Group("/like")
 			{
-				bdrl.POST("", handler.HandleLikeBlog())
-				bdrl.DELETE("", handler.HandleUnLikeBlog())
+				bdrl.POST("", handler.LikeBlog())
+				bdrl.DELETE("", handler.UnLikeBlog())
 			}
 			bdrc := bdr.Group("/comments")
 			{
-				bdrc.GET("", handler.HandleListComment())
-				bdrc.POST("", handler.HandleCreateComment())
-				bdrc.DELETE("", handler.HandleDeleteComment())
+				bdrc.GET("", handler.ListComment())
+				bdrc.POST("", handler.CreateComment())
+				bdrc.DELETE("", handler.DeleteComment())
 			}
 		}
 	}

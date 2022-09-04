@@ -2,7 +2,7 @@ package import_export
 
 import (
 	"bufio"
-	"gd-blog/src/persistence/model"
+	"gd-blog/src/repo/model"
 	"gopkg.in/errgo.v2/errors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

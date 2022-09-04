@@ -1,9 +1,11 @@
 package model
 
+import "gorm.io/gorm"
+
 const TableNameVisitor = "visitor"
 
 type Visitor struct {
-	Model
+	gorm.Model
 	Name  string `gorm:"uniqueIndex"`
 	IP    string
 	Email string

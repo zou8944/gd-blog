@@ -1,10 +1,10 @@
 package main
 
 import (
-	"gd-blog/src/domain/service"
+	"gd-blog/src/facade/route"
+	"gd-blog/src/facade/service"
 	"gd-blog/src/ioc"
-	"gd-blog/src/persistence"
-	"gd-blog/src/route"
+	"gd-blog/src/repo"
 	_ "github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -22,12 +22,10 @@ func initComponents() error {
 	if err != nil {
 		return err
 	}
-	blogRepoImpl := persistence.NewBlogRepoImpl(db)
-	commentRepoImpl := persistence.NewCommentRepoImpl(db)
-	userRepoImpl := persistence.NewUserRepoImpl(db)
-	blogDomainService := service.NewBlogDomainService(blogRepoImpl, commentRepoImpl, userRepoImpl)
-	blogHandler := route.NewBlogHandler(blogDomainService)
-	err = ioc.PutIn("blogDomainService", blogDomainService)
+	blogRepo := repo.NewBlogRepo(db)
+	commentRepo := repo.NewCommentRepo(db)
+	blogService := service.NewBlogService(blogRepo, commentRepo)
+	blogHandler := route.NewBlogHandler(blogService)
 	err = ioc.PutIn("blogHandler", blogHandler)
 	return err
 }

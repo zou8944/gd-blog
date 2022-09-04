@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gd-blog/src/persistence/model"
+	"gd-blog/src/repo/model"
 	"gopkg.in/errgo.v2/errors"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
