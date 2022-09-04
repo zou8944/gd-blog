@@ -17,6 +17,7 @@ func InitRoutes() (*gin.Engine, error) {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
+	r.GET("/info", handler.GetStat())
 	br := r.Group("/blogs")
 	{
 		br.GET("", handler.ListBlog())

@@ -7,19 +7,23 @@ import (
 	"strconv"
 )
 
-type BlogDomainService struct {
+type BlogService struct {
 	blogRepo    *repo.BlogRepo
 	commentRepo *repo.CommentRepo
 }
 
-func NewBlogService(blogRepo *repo.BlogRepo, commentRepo *repo.CommentRepo) BlogDomainService {
-	return BlogDomainService{
+func NewBlogService(blogRepo *repo.BlogRepo, commentRepo *repo.CommentRepo) BlogService {
+	return BlogService{
 		blogRepo:    blogRepo,
 		commentRepo: commentRepo,
 	}
 }
 
-func (bs *BlogDomainService) GetBlog(id int) (*dto.Blog, error) {
+func (bs *BlogService) GetSiteStat() (*dto.Statistics, error) {
+	return bs.blogRepo.SelectStat()
+}
+
+func (bs *BlogService) GetBlog(id int) (*dto.Blog, error) {
 	bm, err := bs.blogRepo.SelectOne(id)
 	if err != nil {
 		return nil, errors.Wrap(err)
@@ -27,7 +31,7 @@ func (bs *BlogDomainService) GetBlog(id int) (*dto.Blog, error) {
 	return dto.ConvertBM2BT(&bm)
 }
 
-func (bs *BlogDomainService) ListBlog(sepId int, limit int) (map[string]interface{}, error) {
+func (bs *BlogService) ListBlog(sepId int, limit int) (map[string]interface{}, error) {
 	bms, err := bs.blogRepo.Select(sepId, limit)
 	if err != nil {
 		return nil, errors.Wrap(err)
@@ -46,7 +50,7 @@ func (bs *BlogDomainService) ListBlog(sepId int, limit int) (map[string]interfac
 	}, nil
 }
 
-func (bs *BlogDomainService) SearchBlog(keyword string) ([]dto.Blog, error) {
+func (bs *BlogService) SearchBlog(keyword string) ([]dto.Blog, error) {
 	bms, err := bs.blogRepo.Search(keyword)
 	if err != nil {
 		return nil, errors.Wrap(err)

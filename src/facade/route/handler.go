@@ -13,11 +13,32 @@ type ListQueryParam struct {
 }
 
 type BlogHandler struct {
-	service service.BlogDomainService
+	service service.BlogService
 }
 
-func NewBlogHandler(blogDomainService service.BlogDomainService) BlogHandler {
+func NewBlogHandler(blogDomainService service.BlogService) BlogHandler {
 	return BlogHandler{service: blogDomainService}
+}
+
+func (bh *BlogHandler) GetStat() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		stat, err := bh.service.GetSiteStat()
+		if err != nil {
+			panic(err)
+		}
+		siteInfo := dto.SiteInfo{
+			Author: dto.Author{
+				Name:   "果冻",
+				Desc:   "果冻的碎碎念",
+				Avatar: "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83equib0YGKeGrRww67LyZ7hSONtAW59RHDTd2JuKmSfQLEs8zWIB14hUcHibNG41zNibv5mr5QhM5QDMQ/132",
+				CSDN:   "https://blog.csdn.net/zou8944",
+				Github: "https://github.com/zou8944",
+			},
+			Statistics: *stat,
+			Beian:      "粤ICP备2021024139号",
+		}
+		c.JSON(http.StatusOK, dto.Succeed(siteInfo))
+	}
 }
 
 func (bh *BlogHandler) ListBlog() func(c *gin.Context) {
