@@ -1,10 +1,11 @@
 package main
 
 import (
-	"gd-blog/src/facade/route"
-	"gd-blog/src/facade/service"
-	"gd-blog/src/ioc"
-	"gd-blog/src/repo"
+	"gd-blog/facade/controller"
+	route2 "gd-blog/facade/route"
+	"gd-blog/facade/service"
+	"gd-blog/ioc"
+	repo "gd-blog/repo"
 	_ "github.com/mattn/go-sqlite3"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -23,10 +24,9 @@ func initComponents() error {
 		return err
 	}
 	blogRepo := repo.NewBlogRepo(db)
-	commentRepo := repo.NewCommentRepo(db)
-	blogService := service.NewBlogService(blogRepo, commentRepo)
-	blogHandler := route.NewBlogHandler(blogService)
-	err = ioc.PutIn("blogHandler", blogHandler)
+	blogService := service.NewBlogService(blogRepo)
+	blogController := controller.NewBlogController(blogService)
+	err = ioc.PutIn("blogController", blogController)
 	return err
 }
 
@@ -35,7 +35,7 @@ func main() {
 	if err != nil {
 		log.Fatalln("IOC初始化失败", err)
 	}
-	r, err := route.InitRoutes()
+	r, err := route2.Init()
 	if err != nil {
 		log.Fatalln("路由初始化失败", err)
 	}

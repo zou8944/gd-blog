@@ -1,8 +1,8 @@
 package dto
 
 import (
-	"gd-blog/src/custom"
-	"gd-blog/src/repo/model"
+	"gd-blog/custom"
+	"gd-blog/repo/model"
 	"github.com/jinzhu/copier"
 	"gopkg.in/errgo.v2/errors"
 )

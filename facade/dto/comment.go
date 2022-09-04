@@ -1,6 +1,8 @@
 package dto
 
-import "gd-blog/src/custom"
+import (
+	"gd-blog/custom"
+)
 
 type Comment struct {
 	ID             uint            `json:"id"`

@@ -13,3 +13,11 @@ func Succeed(data interface{}) R {
 		Data:    data,
 	}
 }
+
+func Reject(err error) R {
+	return R{
+		Code:    "Rejected",
+		Message: err.Error(),
+		Data:    nil,
+	}
+}

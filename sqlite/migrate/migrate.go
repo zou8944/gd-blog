@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gd-blog/src/repo/model"
+	model2 "gd-blog/repo/model"
 	"gopkg.in/errgo.v2/errors"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -13,8 +13,8 @@ func main() {
 	if err != nil {
 		panic("Failed to connect database")
 	}
-	err = db.AutoMigrate(&model.Category{}, &model.Tag{}, &model.Visitor{})
-	err = db.AutoMigrate(&model.Blog{}, &model.Comment{})
+	err = db.AutoMigrate(&model2.Category{}, &model2.Tag{}, &model2.Visitor{})
+	err = db.AutoMigrate(&model2.Blog{}, &model2.Comment{})
 	if err != nil {
 		log.Fatalln(errors.Wrap(err))
 	}

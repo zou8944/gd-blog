@@ -1,20 +1,29 @@
 package repo
 
 import (
-	"gd-blog/src/facade/dto"
-	"gd-blog/src/repo/model"
+	"gd-blog/facade/dto"
+	"gd-blog/repo/model"
 	"gorm.io/gorm"
 )
 
-type BlogRepo struct {
+type BlogRepo interface {
+	SelectStat() (*dto.Statistics, error)
+	SelectOne(id int) (model.Blog, error)
+	Select(separateId int, limit int) ([]model.Blog, error)
+	Search(keyword string) ([]model.Blog, error)
+	SelectTags() ([]dto.Tag, error)
+	SelectCategories() ([]dto.Category, error)
+}
+
+type blogRepo struct {
 	db *gorm.DB
 }
 
-func NewBlogRepo(db *gorm.DB) *BlogRepo {
-	return &BlogRepo{db: db}
+func NewBlogRepo(db *gorm.DB) BlogRepo {
+	return &blogRepo{db: db}
 }
 
-func (br *BlogRepo) SelectStat() (*dto.Statistics, error) {
+func (br *blogRepo) SelectStat() (*dto.Statistics, error) {
 	var blogCount int64
 	var categoryCount int64
 	var tagCount int64
@@ -39,13 +48,13 @@ func (br *BlogRepo) SelectStat() (*dto.Statistics, error) {
 	}, nil
 }
 
-func (br *BlogRepo) SelectOne(id int) (model.Blog, error) {
+func (br *blogRepo) SelectOne(id int) (model.Blog, error) {
 	var blogModel model.Blog
 	br.db.Model(&model.Blog{}).Preload("Categories").First(&blogModel)
 	return blogModel, br.db.Error
 }
 
-func (br *BlogRepo) Select(separateId int, limit int) ([]model.Blog, error) {
+func (br *blogRepo) Select(separateId int, limit int) ([]model.Blog, error) {
 	blogModels := []model.Blog{}
 	dsl := br.db.Preload("Categories").Preload("Tags")
 	if separateId != 0 {
@@ -55,27 +64,7 @@ func (br *BlogRepo) Select(separateId int, limit int) ([]model.Blog, error) {
 	return blogModels, br.db.Error
 }
 
-func (br *BlogRepo) Search(keyword string) ([]model.Blog, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (br *BlogRepo) Insert(blog model.Blog) (model.Blog, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (br *BlogRepo) Update(blog model.Blog) (model.Blog, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (br *BlogRepo) Delete(id int) (model.Blog, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (br *BlogRepo) SelectTags() ([]dto.Tag, error) {
+func (br *blogRepo) SelectTags() ([]dto.Tag, error) {
 	var results []map[string]interface{}
 	br.db.Model(&model.Tag{}).Select("id, name, (select count(1) from blog_tags where tag_id = tag.id) as blog_count").Order("blog_count desc").Find(&results)
 	if br.db.Error != nil {
@@ -93,7 +82,7 @@ func (br *BlogRepo) SelectTags() ([]dto.Tag, error) {
 	return tags, nil
 }
 
-func (br *BlogRepo) SelectCategories() ([]dto.Category, error) {
+func (br *blogRepo) SelectCategories() ([]dto.Category, error) {
 	var results []map[string]interface{}
 	br.db.Model(&model.Category{}).Select("id, name, (select count(1) from blog_categories where category_id = category.id) as blog_count").Order("blog_count desc").Find(&results)
 	if br.db.Error != nil {
@@ -109,4 +98,8 @@ func (br *BlogRepo) SelectCategories() ([]dto.Category, error) {
 		categories = append(categories, category)
 	}
 	return categories, nil
+}
+
+func (br *blogRepo) Search(keyword string) ([]model.Blog, error) {
+	panic("not implemented")
 }
