@@ -74,3 +74,39 @@ func (br *BlogRepo) Delete(id int) (model.Blog, error) {
 	//TODO implement me
 	panic("implement me")
 }
+
+func (br *BlogRepo) SelectTags() ([]dto.Tag, error) {
+	var results []map[string]interface{}
+	br.db.Model(&model.Tag{}).Select("id, name, (select count(1) from blog_tags where tag_id = tag.id) as blog_count").Order("blog_count desc").Find(&results)
+	if br.db.Error != nil {
+		return nil, br.db.Error
+	}
+	var tags []dto.Tag
+	for _, r := range results {
+		tag := dto.Tag{
+			ID:        r["id"].(uint),
+			Name:      r["name"].(string),
+			BlogCount: r["blog_count"].(int64),
+		}
+		tags = append(tags, tag)
+	}
+	return tags, nil
+}
+
+func (br *BlogRepo) SelectCategories() ([]dto.Category, error) {
+	var results []map[string]interface{}
+	br.db.Model(&model.Category{}).Select("id, name, (select count(1) from blog_categories where category_id = category.id) as blog_count").Order("blog_count desc").Find(&results)
+	if br.db.Error != nil {
+		return nil, br.db.Error
+	}
+	var categories []dto.Category
+	for _, r := range results {
+		category := dto.Category{
+			ID:        r["id"].(uint),
+			Name:      r["name"].(string),
+			BlogCount: r["blog_count"].(int64),
+		}
+		categories = append(categories, category)
+	}
+	return categories, nil
+}

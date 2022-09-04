@@ -57,3 +57,11 @@ func (bs *BlogService) SearchBlog(keyword string) ([]dto.Blog, error) {
 	}
 	return dto.ConvertBMS2BTS(bms)
 }
+
+func (bs *BlogService) ListTag() ([]dto.Tag, error) {
+	return bs.blogRepo.SelectTags()
+}
+
+func (bs *BlogService) ListCategories() ([]dto.Category, error) {
+	return bs.blogRepo.SelectCategories()
+}

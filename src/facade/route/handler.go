@@ -41,6 +41,26 @@ func (bh *BlogHandler) GetStat() func(c *gin.Context) {
 	}
 }
 
+func (bh *BlogHandler) ListCategories() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		categories, err := bh.service.ListCategories()
+		if err != nil {
+			panic(err)
+		}
+		c.JSON(http.StatusOK, dto.Succeed(categories))
+	}
+}
+
+func (bh *BlogHandler) ListTags() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		tags, err := bh.service.ListTag()
+		if err != nil {
+			panic(err)
+		}
+		c.JSON(http.StatusOK, dto.Succeed(tags))
+	}
+}
+
 func (bh *BlogHandler) ListBlog() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var p ListQueryParam

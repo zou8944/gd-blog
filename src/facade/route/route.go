@@ -18,6 +18,8 @@ func InitRoutes() (*gin.Engine, error) {
 	r.Use(gin.Recovery())
 
 	r.GET("/info", handler.GetStat())
+	r.GET("/tags", handler.ListTags())
+	r.GET("/categories", handler.ListCategories())
 	br := r.Group("/blogs")
 	{
 		br.GET("", handler.ListBlog())
