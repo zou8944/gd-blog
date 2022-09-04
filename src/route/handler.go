@@ -1,12 +1,15 @@
 package route
 
 import (
-	"encoding/json"
 	"gd-blog/src/domain/service"
-	"gd-blog/src/gdlog"
+	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
+
+type ListQueryParam struct {
+	SeparateId int `json:"separateIdd"`
+	Limit      int `json:"limit"`
+}
 
 type BlogHandler struct {
 	blogDomainService service.BlogDomainService
@@ -16,63 +19,56 @@ func NewBlogHandler(blogDomainService service.BlogDomainService) BlogHandler {
 	return BlogHandler{blogDomainService: blogDomainService}
 }
 
-func (bs *BlogHandler) HandleListBlog() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		separateId, _ := strconv.Atoi(r.FormValue("separateId"))
-		limit, _ := strconv.Atoi(r.FormValue("limit"))
-		blogs, err := bs.blogDomainService.ListBlog(separateId, limit)
-		if err != nil {
-			gdlog.Error(err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+func (bs *BlogHandler) HandleListBlog() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		var p ListQueryParam
+		if err := c.ShouldBindQuery(&p); err != nil {
+			c.JSON(http.StatusBadRequest, err)
 		}
-		bytes, err := json.Marshal(blogs)
+		blogs, err := bs.blogDomainService.ListBlog(p.SeparateId, p.Limit)
 		if err != nil {
-			gdlog.Error(err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
+			panic(err)
 		}
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.Write(bytes)
+		c.JSON(http.StatusOK, blogs)
 	}
 }
 
-func (bs *BlogHandler) HandleCreateBlog() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleCreateBlog() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleGetBlog() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleGetBlog() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleUpdateBlog() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleUpdateBlog() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleLikeBlog() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleLikeBlog() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleUnLikeBlog() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleUnLikeBlog() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleCreateComment() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleCreateComment() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleListComment() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleListComment() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }
 
-func (bs *BlogHandler) HandleDeleteComment() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (bs *BlogHandler) HandleDeleteComment() func(c *gin.Context) {
+	return func(c *gin.Context) {
 	}
 }

@@ -10,7 +10,6 @@ import (
 	"gorm.io/gorm"
 	logger2 "gorm.io/gorm/logger"
 	"log"
-	"net/http"
 	"os"
 )
 
@@ -38,13 +37,9 @@ func main() {
 	if err != nil {
 		log.Fatalln("IOC初始化失败", err)
 	}
-	err = route.InitRoutes()
+	r, err := route.InitRoutes()
 	if err != nil {
 		log.Fatalln("路由初始化失败", err)
 	}
-	s := &http.Server{
-		Addr: ":15000",
-	}
-	log.Println("监听中 :15000")
-	log.Fatalln("HTTP服务启动失败", s.ListenAndServe())
+	log.Fatalln("HTTP服务启动失败", r.Run(":15000"))
 }
