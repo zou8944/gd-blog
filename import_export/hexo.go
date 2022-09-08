@@ -2,7 +2,7 @@ package import_export
 
 import (
 	"bufio"
-	model2 "gd-blog/repo/model"
+	"gd-blog/repo/model"
 	"gopkg.in/errgo.v2/errors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -103,14 +103,14 @@ func Import(db *gorm.DB, r io.Reader) error {
 		return err
 	}
 
-	var blog model2.Blog
-	db.Where(&model2.Blog{Title: hexoHeader.Title}).First(&blog)
-	if !reflect.DeepEqual(blog, model2.Blog{}) {
+	var blog model.Blog
+	db.Where(&model.Blog{Title: hexoHeader.Title}).First(&blog)
+	if !reflect.DeepEqual(blog, model.Blog{}) {
 		log.Printf("blog with title '%s' already exist, ignore\n", hexoHeader.Title)
 		return nil
 	}
 	err = db.Transaction(func(tx *gorm.DB) error {
-		blog = model2.Blog{
+		blog = model.Blog{
 			Model: gorm.Model{
 				CreatedAt: hexoHeader.Date,
 				UpdatedAt: hexoHeader.Updated,
@@ -123,9 +123,9 @@ func Import(db *gorm.DB, r io.Reader) error {
 		tx.Omit(clause.Associations).Create(&blog)
 
 		// 单独处理many to many的bug: 关联数据已存在时，会插入脏数据
-		var categories []model2.Category
+		var categories []model.Category
 		for _, cname := range hexoHeader.Categories {
-			categories = append(categories, model2.Category{
+			categories = append(categories, model.Category{
 				Name:        cname,
 				Description: "",
 			})
@@ -138,9 +138,9 @@ func Import(db *gorm.DB, r io.Reader) error {
 			clause.Returning{},
 		).Create(&categories)
 
-		var tags []model2.Tag
+		var tags []model.Tag
 		for _, tname := range hexoHeader.Tags {
-			tags = append(tags, model2.Tag{
+			tags = append(tags, model.Tag{
 				Name: tname,
 			})
 		}
@@ -168,6 +168,6 @@ func Import(db *gorm.DB, r io.Reader) error {
 	return nil
 }
 
-func Export(blog model2.Blog) (io.Reader, error) {
+func Export(blog model.Blog) (io.Reader, error) {
 	return nil, nil
 }
