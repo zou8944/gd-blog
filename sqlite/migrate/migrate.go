@@ -2,7 +2,7 @@ package migrate
 
 import (
 	"gd-blog/gdlog"
-	model2 "gd-blog/repo/model"
+	"gd-blog/repo/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -15,8 +15,8 @@ func AutoMigrate() {
 	if err != nil {
 		panic(err)
 	}
-	err = db.AutoMigrate(&model2.Category{}, &model2.Tag{}, &model2.Visitor{})
-	err = db.AutoMigrate(&model2.Blog{}, &model2.Comment{})
+	err = db.AutoMigrate(&model.Category{}, &model.Tag{}, &model.Visitor{})
+	err = db.AutoMigrate(&model.Blog{}, &model.Comment{})
 	if err != nil {
 		panic(err)
 	}

@@ -35,12 +35,6 @@ func InitConfig() {
 }
 
 func InitDB() {
-	/**
-	1. 本地有云端没有，直接使用本地
-	2. 本地没有云端有，直接使用云端
-	3. 本地和云端都有，使用更新时间更新的那个
-	4. 本地和云端都没有，调用sqlite命令行初始化一个文件
-	*/
 	gdlog.Info("数据库文件初始化开始")
 
 	lastModifiedInOss, existInOss := getObjectLastModifyTime(objectKey)
