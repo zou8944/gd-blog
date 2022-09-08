@@ -1,0 +1,10 @@
+aliyun:
+  oss:
+    endpoint: xxx
+    accessKeyId: xxx
+    accessKeySecret: xxx
+    blog:
+      bucket: gdz
+      objectKey: backup/blog.db
+database:
+  filepath: sqlite/blog.db

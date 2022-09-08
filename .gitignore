@@ -1,1 +1,7 @@
 .idea
+sqlite/blog.db
+sqlite/sqlite3
+config/dev.yaml
+config/test.yaml
+config/prod.yaml
+config/qa.yaml
