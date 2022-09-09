@@ -30,8 +30,7 @@ func InitTest() error {
 	viper.Set("database.filepath", path.Join(projectPath(), "sqlite/test.db"))
 	viper.Set("aliyun.oss.blog.objectKey", "blog_test.db")
 
-	InitConfig()
-	return nil
+	return Init()
 }
 
 func TestInitDB(t *testing.T) {
@@ -39,20 +38,24 @@ func TestInitDB(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	objectKey = viper.GetString("aliyun.oss.blog.objectKey")
-	dbFilePath = viper.GetString("database.filepath")
+	objectKey := viper.GetString("aliyun.oss.blog.objectKey")
+	dbFilePath := viper.GetString("database.filepath")
 	// 本地文件删除，云端也删除
 	_ = os.Remove(dbFilePath)
 	_ = ossBucket.DeleteObject(objectKey)
 	// 跑一次，则本地有了，云端也有了
-	InitDB()
-	_, err := os.Stat(dbFilePath)
-	if err != nil {
+
+	if err := InitDB(); err != nil {
 		t.Error(err)
 		return
 	}
-	_, err = ossBucket.GetObjectMeta(objectKey)
-	if err != nil {
+
+	if _, err := os.Stat(dbFilePath); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if _, err := ossBucket.GetObjectMeta(objectKey); err != nil {
 		t.Error(err)
 		return
 	}

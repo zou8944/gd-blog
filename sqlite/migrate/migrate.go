@@ -1,17 +1,16 @@
 package migrate
 
 import (
+	"gd-blog/config"
 	"gd-blog/gdlog"
 	"gd-blog/repo/model"
-	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 func AutoMigrate() {
 	gdlog.Info("数据库自动迁移开始")
-	dbFilePath := viper.GetString("database.filepath")
-	db, err := gorm.Open(sqlite.Open(dbFilePath), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(config.Database.FilePath), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
