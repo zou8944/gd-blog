@@ -2,6 +2,8 @@ package dto
 
 import (
 	"gd-blog/custom"
+	"gd-blog/repo/model"
+	"github.com/jinzhu/copier"
 )
 
 type Comment struct {
@@ -14,25 +16,27 @@ type Comment struct {
 	Approved       bool            `json:"-"`
 }
 
-func NewComment(user Visitor, blogId int, replyId int, content string) *Comment {
-	comment := &Comment{
-		Visitor:        user,
-		BlogId:         blogId,
-		ReplyCommentId: replyId,
-		Content:        content,
-		Approved:       false,
+func (c *Comment) ToModel() (*model.Comment, error) {
+	var mc model.Comment
+	err := copier.Copy(&mc, c)
+	return &mc, err
+}
+
+func ConvertCM2CT(cm *model.Comment) (*Comment, error) {
+	var ct Comment
+	err := copier.Copy(&ct, cm)
+	return &ct, err
+}
+
+func ConvertCMS2CTS(cms []model.Comment) ([]Comment, error) {
+	cts := []Comment{}
+	for _, cm := range cms {
+		var ct Comment
+		err := copier.Copy(&ct, &cm)
+		if err != nil {
+			return nil, err
+		}
+		cts = append(cts, ct)
 	}
-	return comment
-}
-
-func (c *Comment) Update(content string) {
-	c.Content = content
-}
-
-func (c *Comment) Approve() {
-	c.Approved = true
-}
-
-func (c *Comment) UnApprove() {
-	c.Approved = false
+	return cts, nil
 }

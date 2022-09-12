@@ -21,3 +21,11 @@ func Reject(err error) R {
 		Data:    nil,
 	}
 }
+
+func Error(err error) R {
+	return R{
+		Code:    "InternalError",
+		Message: err.Error(),
+		Data:    nil,
+	}
+}

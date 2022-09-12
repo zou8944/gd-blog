@@ -9,10 +9,16 @@ import (
 func Init() (*gin.Engine, error) {
 
 	var blogController controller.BlogController
+	var commentController controller.CommentController
 	if object, err := ioc.Provide("blogController"); err != nil {
 		return nil, err
 	} else {
 		blogController = object.(controller.BlogController)
+	}
+	if object, err := ioc.Provide("commentController"); err != nil {
+		return nil, err
+	} else {
+		commentController = object.(controller.CommentController)
 	}
 
 	r := gin.New()
@@ -20,8 +26,8 @@ func Init() (*gin.Engine, error) {
 	r.Use(gin.Recovery())
 
 	r.GET("/info", blogController.GetStat)
-	r.GET("/tags", blogController.ListTags)
-	r.GET("/categories", blogController.ListCategories)
+	r.GET("/tags", blogController.ListTag)
+	r.GET("/categories", blogController.ListCategory)
 	br := r.Group("/blogs")
 	{
 		br.GET("", blogController.ListBlog)
@@ -37,9 +43,8 @@ func Init() (*gin.Engine, error) {
 			}
 			bdrc := bdr.Group("/comments")
 			{
-				bdrc.GET("", blogController.ListComment)
-				bdrc.POST("", blogController.CreateComment)
-				bdrc.DELETE("", blogController.DeleteComment)
+				bdrc.POST("", commentController.Create)
+				bdrc.GET("", commentController.List)
 			}
 		}
 	}

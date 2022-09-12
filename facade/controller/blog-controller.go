@@ -35,7 +35,7 @@ func (bh *BlogController) GetStat(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.Succeed(siteInfo))
 }
 
-func (bh *BlogController) ListCategories(c *gin.Context) {
+func (bh *BlogController) ListCategory(c *gin.Context) {
 	categories, err := bh.service.ListCategories()
 	if err != nil {
 		panic(err)
@@ -43,7 +43,7 @@ func (bh *BlogController) ListCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, dto.Succeed(categories))
 }
 
-func (bh *BlogController) ListTags(c *gin.Context) {
+func (bh *BlogController) ListTag(c *gin.Context) {
 	tags, err := bh.service.ListTag()
 	if err != nil {
 		panic(err)
@@ -52,11 +52,11 @@ func (bh *BlogController) ListTags(c *gin.Context) {
 }
 
 func (bh *BlogController) ListBlog(c *gin.Context) {
-	checkpoint, err := strconv.ParseInt(c.Query("checkpoint"), 10, 1)
+	checkpoint, err := strconv.ParseInt(c.Query("checkpoint"), 10, strconv.IntSize)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dto.Reject(err))
 	}
-	limit, err := strconv.ParseInt(c.DefaultQuery("limit", "20"), 10, 1)
+	limit, err := strconv.ParseInt(c.DefaultQuery("limit", "20"), 10, strconv.IntSize)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dto.Reject(err))
 	}
@@ -81,13 +81,4 @@ func (bh *BlogController) LikeBlog(c *gin.Context) {
 }
 
 func (bh *BlogController) UnLikeBlog(c *gin.Context) {
-}
-
-func (bh *BlogController) CreateComment(c *gin.Context) {
-}
-
-func (bh *BlogController) ListComment(c *gin.Context) {
-}
-
-func (bh *BlogController) DeleteComment(c *gin.Context) {
 }

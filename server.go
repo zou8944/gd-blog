@@ -27,9 +27,14 @@ func initComponents() error {
 		return err
 	}
 	blogRepo := repo.NewBlogRepo(db)
+	commentRepo := repo.NewCommentRepo(db)
 	blogService := service.NewBlogService(blogRepo)
+	commentService := service.NewCommentService(commentRepo)
 	blogController := controller.NewBlogController(blogService)
-	return ioc.PutIn("blogController", blogController)
+	commentController := controller.NewCommentController(commentService)
+	err = ioc.PutIn("blogController", blogController)
+	err = ioc.PutIn("commentController", commentController)
+	return err
 }
 
 func initAll() (*gin.Engine, error) {

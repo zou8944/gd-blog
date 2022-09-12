@@ -91,7 +91,7 @@ func loadOssObject(dbFilePath, objectKey string) error {
 
 func checkDbFileExist(dbFilePath string) (time.Time, bool, error) {
 	if fileInfo, err := os.Stat(dbFilePath); err != nil {
-		if !os.IsNotExist(err) {
+		if os.IsNotExist(err) {
 			return time.Time{}, false, nil
 		}
 		return time.Time{}, false, errors.Wrap(err)
