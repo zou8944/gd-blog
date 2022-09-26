@@ -52,15 +52,15 @@ func (bh *BlogController) ListTag(c *gin.Context) {
 }
 
 func (bh *BlogController) ListBlog(c *gin.Context) {
-	checkpoint, err := strconv.ParseInt(c.Query("checkpoint"), 10, strconv.IntSize)
+	pageNo, err := strconv.ParseInt(c.Query("pageNo"), 10, strconv.IntSize)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dto.Reject(err))
 	}
-	limit, err := strconv.ParseInt(c.DefaultQuery("limit", "20"), 10, strconv.IntSize)
+	pageSize, err := strconv.ParseInt(c.DefaultQuery("pageSize", "20"), 10, strconv.IntSize)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dto.Reject(err))
 	}
-	blogs, err := bh.service.ListBlog(int(checkpoint), int(limit))
+	blogs, err := bh.service.ListBlog(int(pageNo), int(pageSize))
 	if err != nil {
 		panic(err)
 	}
@@ -71,6 +71,15 @@ func (bh *BlogController) CreateBlog(c *gin.Context) {
 }
 
 func (bh *BlogController) GetBlog(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, strconv.IntSize)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, dto.Reject(err))
+	}
+	blog, err := bh.service.GetBlog(int(id))
+	if err != nil {
+		panic(err)
+	}
+	c.JSON(http.StatusOK, dto.Succeed(blog))
 }
 
 func (bh *BlogController) UpdateBlog(c *gin.Context) {

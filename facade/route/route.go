@@ -3,7 +3,9 @@ package route
 import (
 	"gd-blog/facade/controller"
 	"gd-blog/ioc"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func Init() (*gin.Engine, error) {
@@ -24,6 +26,15 @@ func Init() (*gin.Engine, error) {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:        true,
+		AllowMethods:           []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:           []string{"*"},
+		AllowCredentials:       true,
+		MaxAge:                 12 * time.Hour,
+		AllowWildcard:          true,
+		AllowBrowserExtensions: true,
+	}))
 
 	r.GET("/info", blogController.GetStat)
 	r.GET("/tags", blogController.ListTag)
@@ -32,7 +43,7 @@ func Init() (*gin.Engine, error) {
 	{
 		br.GET("", blogController.ListBlog)
 		br.POST("", blogController.CreateBlog)
-		bdr := br.Group("/{id}")
+		bdr := br.Group("/:id")
 		{
 			bdr.GET("", blogController.GetBlog)
 			bdr.PUT("", blogController.UpdateBlog)

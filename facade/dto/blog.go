@@ -41,7 +41,7 @@ func ConvertBMS2BTS(bms []model.Blog) ([]Blog, error) {
 		} else {
 			bt.Summary = bt.Content
 		}
-		bt.Content = ""
+		//bt.Content = ""
 		bts = append(bts, bt)
 	}
 	return bts, nil

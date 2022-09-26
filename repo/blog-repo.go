@@ -10,6 +10,7 @@ type BlogRepo interface {
 	SelectStat() (*dto.Statistics, error)
 	SelectOne(id int) (model.Blog, error)
 	Select(separateId int, limit int) ([]model.Blog, error)
+	Count() (int, error)
 	Search(keyword string) ([]model.Blog, error)
 	SelectTags() ([]dto.Tag, error)
 	SelectCategories() ([]dto.Category, error)
@@ -50,17 +51,13 @@ func (br *blogRepo) SelectStat() (*dto.Statistics, error) {
 
 func (br *blogRepo) SelectOne(id int) (model.Blog, error) {
 	var blogModel model.Blog
-	br.db.Model(&model.Blog{}).Preload("Categories").First(&blogModel)
+	br.db.Model(&model.Blog{}).Preload("Categories").Where("id = ?", id).First(&blogModel)
 	return blogModel, br.db.Error
 }
 
-func (br *blogRepo) Select(separateId int, limit int) ([]model.Blog, error) {
+func (br *blogRepo) Select(pageNo int, pageSize int) ([]model.Blog, error) {
 	blogModels := []model.Blog{}
-	dsl := br.db.Preload("Categories").Preload("Tags")
-	if separateId != 0 {
-		dsl = dsl.Where("created_at < (select created_at from blog where id = ?)", separateId)
-	}
-	dsl.Limit(limit).Order("created_at desc").Find(&blogModels)
+	br.db.Preload("Categories").Preload("Tags").Limit(pageSize).Offset(pageSize * (pageNo - 1)).Order("created_at desc").Find(&blogModels)
 	return blogModels, br.db.Error
 }
 
@@ -98,6 +95,12 @@ func (br *blogRepo) SelectCategories() ([]dto.Category, error) {
 		categories = append(categories, category)
 	}
 	return categories, nil
+}
+
+func (br *blogRepo) Count() (int, error) {
+	var count int64
+	br.db.Model(&model.Blog{}).Count(&count)
+	return int(count), br.db.Error
 }
 
 func (br *blogRepo) Search(keyword string) ([]model.Blog, error) {

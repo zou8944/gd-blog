@@ -4,13 +4,12 @@ import (
 	"gd-blog/facade/dto"
 	"gd-blog/repo"
 	"gopkg.in/errgo.v2/errors"
-	"strconv"
 )
 
 type BlogService interface {
 	GetSiteStat() (*dto.Statistics, error)
 	GetBlog(id int) (*dto.Blog, error)
-	ListBlog(sepId int, limit int) (map[string]interface{}, error)
+	ListBlog(pageNo int, pageSize int) (map[string]interface{}, error)
 	SearchBlog(keyword string) ([]dto.Blog, error)
 	ListTag() ([]dto.Tag, error)
 	ListCategories() ([]dto.Category, error)
@@ -38,22 +37,22 @@ func (bs *blogService) GetBlog(id int) (*dto.Blog, error) {
 	return dto.ConvertBM2BT(&bm)
 }
 
-func (bs *blogService) ListBlog(sepId int, limit int) (map[string]interface{}, error) {
-	bms, err := bs.blogRepo.Select(sepId, limit)
+func (bs *blogService) ListBlog(pageNo int, pageSize int) (map[string]interface{}, error) {
+	bms, err := bs.blogRepo.Select(pageNo, pageSize)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
-	var checkpoint string
-	if len(bms) > 0 {
-		checkpoint = strconv.Itoa(int(bms[len(bms)-1].ID))
+	count, err := bs.blogRepo.Count()
+	if err != nil {
+		return nil, errors.Wrap(err)
 	}
 	bts, err := dto.ConvertBMS2BTS(bms)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
 	return map[string]interface{}{
-		"data":       bts,
-		"checkpoint": checkpoint,
+		"articles":     bts,
+		"articleCount": count,
 	}, nil
 }
 
