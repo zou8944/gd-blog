@@ -9,4 +9,6 @@ WORKDIR /app
 
 COPY server /app/
 
+EXPOSE 15000
+
 CMD ["/app/server"]
