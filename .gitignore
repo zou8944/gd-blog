@@ -5,3 +5,4 @@ config/dev.yaml
 config/test.yaml
 config/prod.yaml
 config/qa.yaml
+server

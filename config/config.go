@@ -51,6 +51,10 @@ func Init() error {
 	}
 	Oss = c.Oss
 	Database = c.Database
+	pathFromEnv := viper.GetString("SQLITE_FILE")
+	if pathFromEnv != "" {
+		Database.FilePath = pathFromEnv
+	}
 
 	return nil
 }
