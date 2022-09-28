@@ -19,3 +19,11 @@ jobs:
           docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
           docker push zou8944/gd-blog-server:latest
           docker logout
+      - name: Trigger re config server
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_ACCESS_TOKEN }}" \
+            https://api.github.com/repos/zou8944/gd-server-config/dispatches \
+            -d '{"event_type":"re-deploy","client_payload":{"blog-server-success": true}}'
