@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/spf13/viper"
 	"gopkg.in/errgo.v2/errors"
+	"os"
 )
 
 type oss struct {
@@ -51,7 +52,7 @@ func Init() error {
 	}
 	Oss = c.Oss
 	Database = c.Database
-	pathFromEnv := viper.GetString("SQLITE_FILE")
+	pathFromEnv := os.Getenv("SQLITE_FILE")
 	if pathFromEnv != "" {
 		Database.FilePath = pathFromEnv
 	}
