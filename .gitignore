@@ -6,3 +6,5 @@ config/test.yaml
 config/prod.yaml
 config/qa.yaml
 server
+.gitignore
+build.sh
