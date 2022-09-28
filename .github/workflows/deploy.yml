@@ -13,11 +13,11 @@ jobs:
       - name: Build
         run: |
           go build -o server server.go
-          docker build -t zou8944/gd-blog-server:latest .
+          docker build -t registry.cn-shenzhen.aliyuncs.com/zou8944/gd-blog-server:latest .
       - name: Publish to docker hub
         run: |
-          docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
-          docker push zou8944/gd-blog-server:latest
+          docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-shenzhen.aliyuncs.com
+          docker push registry.cn-shenzhen.aliyuncs.com/zou8944/gd-blog-server:latest
           docker logout
       - name: Trigger re config server
         run: |
