@@ -5,10 +5,8 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64
 
-WORKDIR /app
-
-COPY server /app/
+COPY server /
 
 EXPOSE 15000
 
-CMD ["/app/server"]
+CMD ["/server"]
