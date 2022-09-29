@@ -12,7 +12,7 @@ jobs:
           go-version: '^1.18.0'
       - name: Build
         run: |
-          CGO_ENABLED=1 GOOS=linx GOARCH=amd64 go build -o server server.go
+          go build -o server server.go
           docker build -t zou8944/gd-blog-server:latest .
       - name: Publish to docker hub
         run: |
