@@ -13,6 +13,7 @@ jobs:
       - name: Build
         run: |
           go build -o server server.go
+          echo ${{ secrets.CONFIG_DEV_YAML_BASE64 }} | base64 --decode > config/dev.yaml
           docker build -t zou8944/gd-blog-server:latest .
       - name: Publish to docker hub
         run: |
