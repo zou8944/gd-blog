@@ -9,7 +9,7 @@ import (
 type BlogRepo interface {
 	SelectStat() (*dto.Statistics, error)
 	SelectOne(id int) (model.Blog, error)
-	Select(separateId int, limit int) ([]model.Blog, error)
+	Select(pageNo int, pageSize int, cid int) ([]model.Blog, error)
 	Count() (int, error)
 	Search(keyword string) ([]model.Blog, error)
 	SelectTags() ([]dto.Tag, error)
@@ -55,10 +55,15 @@ func (br *blogRepo) SelectOne(id int) (model.Blog, error) {
 	return blogModel, br.db.Error
 }
 
-func (br *blogRepo) Select(pageNo int, pageSize int) ([]model.Blog, error) {
+func (br *blogRepo) Select(pageNo int, pageSize int, cid int) ([]model.Blog, error) {
 	blogModels := []model.Blog{}
-	br.db.Preload("Categories").Preload("Tags").Limit(pageSize).Offset(pageSize * (pageNo - 1)).Order("created_at desc").Find(&blogModels)
-	return blogModels, br.db.Error
+	db := br.db.Preload("Categories").Preload("Tags")
+	if cid > 0 {
+		db.Raw("select * from blog b inner join blog_categories bc on b.id = bc.blog_id where bc.category_id = ? order by b.created_at desc limit ? offset ?", cid, pageSize, pageSize*(pageNo-1)).Find(&blogModels)
+	} else {
+		db.Limit(pageSize).Offset(pageSize * (pageNo - 1)).Order("created_at desc").Find(&blogModels)
+	}
+	return blogModels, db.Error
 }
 
 func (br *blogRepo) SelectTags() ([]dto.Tag, error) {

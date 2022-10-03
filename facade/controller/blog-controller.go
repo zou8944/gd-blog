@@ -52,7 +52,7 @@ func (bh *BlogController) ListTag(c *gin.Context) {
 }
 
 func (bh *BlogController) ListBlog(c *gin.Context) {
-	pageNo, err := strconv.ParseInt(c.Query("pageNo"), 10, strconv.IntSize)
+	pageNo, err := strconv.ParseInt(c.DefaultQuery("pageNo", "1"), 10, strconv.IntSize)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dto.Reject(err))
 	}
@@ -60,7 +60,11 @@ func (bh *BlogController) ListBlog(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dto.Reject(err))
 	}
-	blogs, err := bh.service.ListBlog(int(pageNo), int(pageSize))
+	categoryId, err := strconv.ParseInt(c.DefaultQuery("cid", "0"), 10, strconv.IntSize)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, dto.Reject(err))
+	}
+	blogs, err := bh.service.ListBlog(int(pageNo), int(pageSize), int(categoryId))
 	if err != nil {
 		panic(err)
 	}

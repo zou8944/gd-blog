@@ -9,7 +9,7 @@ import (
 type BlogService interface {
 	GetSiteStat() (*dto.Statistics, error)
 	GetBlog(id int) (*dto.Blog, error)
-	ListBlog(pageNo int, pageSize int) (map[string]interface{}, error)
+	ListBlog(pageNo int, pageSize int, cid int) (map[string]interface{}, error)
 	SearchBlog(keyword string) ([]dto.Blog, error)
 	ListTag() ([]dto.Tag, error)
 	ListCategories() ([]dto.Category, error)
@@ -37,8 +37,8 @@ func (bs *blogService) GetBlog(id int) (*dto.Blog, error) {
 	return dto.ConvertBM2BT(&bm)
 }
 
-func (bs *blogService) ListBlog(pageNo int, pageSize int) (map[string]interface{}, error) {
-	bms, err := bs.blogRepo.Select(pageNo, pageSize)
+func (bs *blogService) ListBlog(pageNo int, pageSize int, cid int) (map[string]interface{}, error) {
+	bms, err := bs.blogRepo.Select(pageNo, pageSize, cid)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
