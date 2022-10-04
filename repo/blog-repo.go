@@ -10,7 +10,7 @@ type BlogRepo interface {
 	SelectStat() (*dto.Statistics, error)
 	SelectOne(id int) (model.Blog, error)
 	Select(pageNo int, pageSize int, cid int) ([]model.Blog, error)
-	Count() (int, error)
+	Count(cid int) (int, error)
 	Search(keyword string) ([]model.Blog, error)
 	SelectTags() ([]dto.Tag, error)
 	SelectCategories() ([]dto.Category, error)
@@ -102,9 +102,13 @@ func (br *blogRepo) SelectCategories() ([]dto.Category, error) {
 	return categories, nil
 }
 
-func (br *blogRepo) Count() (int, error) {
+func (br *blogRepo) Count(cid int) (int, error) {
 	var count int64
-	br.db.Model(&model.Blog{}).Count(&count)
+	if cid > 0 {
+		br.db.Raw("select count(1) from blog b inner join blog_categories bc on b.id = bc.blog_id where category_id = ?", cid).Find(&count)
+	} else {
+		br.db.Model(&model.Blog{}).Count(&count)
+	}
 	return int(count), br.db.Error
 }
 

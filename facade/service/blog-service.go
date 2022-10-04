@@ -42,7 +42,7 @@ func (bs *blogService) ListBlog(pageNo int, pageSize int, cid int) (map[string]i
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
-	count, err := bs.blogRepo.Count()
+	count, err := bs.blogRepo.Count(cid)
 	if err != nil {
 		return nil, errors.Wrap(err)
 	}
