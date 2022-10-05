@@ -7,10 +7,10 @@ ENV GO111MODULE=on \
 
 WORKDIR /app
 
-RUN mkdir -p ./config
+RUN mkdir -p ./configs
 
 COPY server ./server
-COPY config/dev.yaml ./config
+COPY configs/dev.yaml ./configs
 
 RUN chmod +x /app/server
 

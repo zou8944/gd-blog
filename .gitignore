@@ -1,10 +1,10 @@
 .idea
-sqlite/blog.db
-sqlite/sqlite3
-config/dev.yaml
-config/test.yaml
-config/prod.yaml
-config/qa.yaml
+internal/sqlite/blog.db
+internal/sqlite/sqlite3
+configs/dev.yaml
+internal/configs/test.yaml
+internal/configs/prod.yaml
+internal/configs/qa.yaml
 server
 .gitignore
 build.sh
